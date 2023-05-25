@@ -1,0 +1,413 @@
+using AcademiaAtos_DesafioWF_Estacionamento.Classes;
+
+namespace AcademiaAtos_DesafioWF_Estacionamento
+{
+    public partial class Form1 : Form
+    {
+        private List<Veiculo> veiculosEntrada;
+        private List<Veiculo> veiculosSaida;
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            // Leia os dados dos arquivos e atribua às listas
+            veiculosEntrada = Persistencia.LerArquivoVeiculosEntrada();
+            veiculosSaida = Persistencia.LerArquivoVeiculosSaida();
+
+            // Atualize as listas de veículos na interface gráfica
+            AtualizarListasVeiculos();
+        }
+
+        private void AtualizarListasVeiculos()
+        {
+            // Limpe as caixas de texto das listas de veículos
+            textBoxListaVeiculosEntrada.Clear();
+            textBoxListaVeiculosSaida.Clear();
+
+            // Preencha as caixas de texto com os veículos de entrada e saída
+            foreach (Veiculo veiculo in veiculosEntrada)
+            {
+                textBoxListaVeiculosEntrada.AppendText($"{veiculo.PlacaVeiculo} - {veiculo.ModeloVeiculo} - {veiculo.DataEntrada:d/MM/yyyy} - {veiculo.HoraEntrada:h\\:mm}" + Environment.NewLine);
+            }
+
+            foreach (Veiculo veiculo in veiculosSaida)
+            {
+                textBoxListaVeiculosSaida.AppendText($"{veiculo.PlacaVeiculo} - {veiculo.ModeloVeiculo} - {veiculo.TempoPermanencia} minutos - {veiculo.ValorCobrado:c}" + Environment.NewLine);
+            }
+        }
+
+        private void buttonEntrada_Click(object sender, EventArgs e)
+        {
+            string placa = textBoxPlaca.Text.ToUpper();
+            string modeloVeiculo = textBoxModelo.Text.ToUpper();
+            // Obtenha a data e hora atual
+            DateTime dataEntrada = DateTime.Now.Date;
+            TimeSpan horaEntrada = DateTime.Now.TimeOfDay;
+
+            // Crie um objeto Veiculo com os dados de entrada
+            Veiculo veiculo = new Veiculo(placa, modeloVeiculo, dataEntrada, horaEntrada);
+            veiculosEntrada.Add(veiculo);
+
+            // Gravar a lista de veículos de entrada no arquivo
+            Persistencia.GravarArquivoVeiculosEntrada(veiculosEntrada);
+
+            // Atualize a lista de veículos na interface gráfica
+            textBoxListaVeiculosEntrada.AppendText($"{veiculo.PlacaVeiculo} = {veiculo.ModeloVeiculo} - {veiculo.DataEntrada:d/MM/yyyy} - {veiculo.HoraEntrada:h\\:mm}" + Environment.NewLine);
+
+            // Limpe a caixa de texto da placa e modelo do veículo
+            textBoxPlaca.Clear();
+            textBoxModelo.Clear();
+        }
+
+
+        private void buttonSaida_Click(object sender, EventArgs e)
+        {
+            string placa = textBoxPlaca.Text.ToUpper();
+            string modelo = textBoxModelo.Text.ToUpper();
+            // Obtenha a data e hora atual
+            DateTime dataSaida = DateTime.Now.Date;
+            TimeSpan horaSaida = DateTime.Now.TimeOfDay;
+
+            // Localize o veículo de entrada correspondente na lista
+            Veiculo veiculo = veiculosEntrada.Find(v => v.PlacaVeiculo == placa);
+            veiculosEntrada.Remove(veiculo);
+
+            // Calcule o tempo de permanência e o valor cobrado
+            int tempoPermanencia = (int)Math.Ceiling((horaSaida - veiculo.HoraEntrada).TotalMinutes);
+            decimal valorCobrado = tempoPermanencia * 5.00m;
+
+            // Crie um objeto Veiculo com os dados de saída
+            Veiculo veiculoSaida = new Veiculo(veiculo.PlacaVeiculo, veiculo.ModeloVeiculo, veiculo.DataEntrada, veiculo.HoraEntrada);
+            veiculoSaida.TempoPermanencia = tempoPermanencia;
+            veiculoSaida.ValorCobrado = valorCobrado;
+
+            // Adicione o veículo à lista de veículos de saída
+            veiculosSaida.Add(veiculoSaida);
+            
+            // Gravar a lista de veículos de saída no arquivo
+            Persistencia.GravarArquivoVeiculosSaida(veiculosSaida);
+
+            // Atualize a lista de veículos de saída na interface gráfica
+            textBoxListaVeiculosSaida.AppendText($"{veiculoSaida.PlacaVeiculo} - {veiculo.ModeloVeiculo} - {veiculoSaida.TempoPermanencia} minutos - {veiculoSaida.ValorCobrado:c}" + Environment.NewLine);
+
+            // Limpe a caixa de texto da placa do veículo
+            textBoxPlaca.Clear();
+            
+        }
+
+
+        private decimal CalcularValorCobrado(int tempoPermanencia)
+        {
+            const int minutosPorHora = 60;
+            const decimal valorHora = 5.00m;
+
+            int horas = tempoPermanencia / minutosPorHora;
+            if (tempoPermanencia % minutosPorHora > 0)
+                horas++;
+
+            decimal valorCobrado = horas * valorHora;
+            return valorCobrado;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // Exiba a data e hora atual no rótulo de data e hora
+            labelDataHora.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+        }
+
+    }
+}
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AcademiaAtos_DesafioWF_Estacionamento.Classes
+{
+    public static class Persistencia
+    {
+        private const string VeiculosEntradaFile = @"D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\veiculosEntrada.dat";
+        private const string VeiculosSaidaFile = @"D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\veiculosSaida.dat";
+
+        public static List<Veiculo> LerArquivoVeiculosEntrada()
+        {
+            List<Veiculo> veiculosEntrada = new List<Veiculo>();
+
+            if (File.Exists(VeiculosEntradaFile))
+            {
+                string[] linhas = File.ReadAllLines(VeiculosEntradaFile);
+
+                foreach (string linha in linhas)
+                {
+                    string[] dados = linha.Split(';');
+
+                    if (dados.Length == 4)
+                    {
+                        string placa = dados[0];
+                        string modeloVeiculo = dados[1];
+                        DateTime dataEntrada = DateTime.Parse(dados[2]);
+                        TimeSpan horaEntrada = TimeSpan.Parse(dados[3]);
+
+                        Veiculo veiculo = new Veiculo(placa, modeloVeiculo, dataEntrada, horaEntrada);
+                        veiculosEntrada.Add(veiculo);
+                    }
+                }
+            }
+
+            return veiculosEntrada;
+        }
+
+        public static List<Veiculo> LerArquivoVeiculosSaida()
+        {
+            List<Veiculo> veiculosSaida = new List<Veiculo>();
+
+            if (File.Exists(VeiculosSaidaFile))
+            {
+                string[] linhas = File.ReadAllLines(VeiculosSaidaFile);
+
+                foreach (string linha in linhas)
+                {
+                    string[] dados = linha.Split(';');
+
+                    if (dados.Length == 6)
+                    {
+                        string placa = dados[0];
+                        string modeloVeiculo = dados[1];
+                        DateTime dataEntrada = DateTime.Parse(dados[2]);
+                        TimeSpan horaEntrada = TimeSpan.Parse(dados[3]);
+                        int tempoPermanencia = int.Parse(dados[4]);
+                        decimal valorCobrado = decimal.Parse(dados[5]);
+
+                        Veiculo veiculo = new Veiculo(placa, modeloVeiculo, dataEntrada, horaEntrada)
+                        {
+                            TempoPermanencia = tempoPermanencia,
+                            ValorCobrado = valorCobrado
+                        };
+
+                        veiculosSaida.Add(veiculo);
+                    }
+                }
+            }
+
+            return veiculosSaida;
+        }
+
+        public static void GravarArquivoVeiculosEntrada(List<Veiculo> veiculosEntrada)
+        {
+            using (StreamWriter sw = new StreamWriter(VeiculosEntradaFile))
+            {
+                foreach (Veiculo veiculo in veiculosEntrada)
+                {
+                    string linha = $"{veiculo.PlacaVeiculo};{veiculo.ModeloVeiculo};{veiculo.DataEntrada:d/MM/yyyy};{veiculo.HoraEntrada:h\\:mm}";
+                    sw.WriteLine(linha);
+                }
+            }
+        }
+
+        public static void GravarArquivoVeiculosSaida(List<Veiculo> veiculosSaida)
+        {
+            using (StreamWriter sw = new StreamWriter(VeiculosSaidaFile))
+            {
+                foreach (Veiculo veiculo in veiculosSaida)
+                {
+                    string linha = $"{veiculo.PlacaVeiculo};{veiculo.ModeloVeiculo};{veiculo.DataEntrada:d/MM/yyyy};{veiculo.HoraEntrada:h\\:mm};{veiculo.TempoPermanencia};{veiculo.ValorCobrado}";
+                    sw.WriteLine(linha);
+                }
+            }
+        }
+    }
+}
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AcademiaAtos_DesafioWF_Estacionamento.Classes
+{
+    public class Veiculo
+    {
+        public string PlacaVeiculo { get; set; }
+        public string ModeloVeiculo { get; set; }
+        public DateTime DataEntrada { get; set; }
+        public TimeSpan HoraEntrada { get; set; }
+        public int TempoPermanencia { get; set; }
+        public decimal ValorCobrado { get; set; }
+
+        public Veiculo(string placaVeiculo, string modeloVeiculo, DateTime dataEntrada, TimeSpan horaEntrada)
+        {
+            PlacaVeiculo = placaVeiculo;
+            ModeloVeiculo = modeloVeiculo;
+            DataEntrada = dataEntrada;
+            HoraEntrada = horaEntrada;
+        }
+    }
+}
+
+
+
+namespace AcademiaAtos_DesafioWF_Estacionamento
+{
+    partial class Form1
+    {
+        /// <summary>
+        ///  Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        ///  Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        ///  Required method for Designer support - do not modify
+        ///  the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            labelDataHora = new Label();
+            textBoxPlaca = new TextBox();
+            buttonEntrada = new Button();
+            buttonSaida = new Button();
+            textBoxListaVeiculosEntrada = new TextBox();
+            textBoxListaVeiculosSaida = new TextBox();
+            labelBemVindo = new Label();
+            label1 = new Label();
+            textBoxModelo = new TextBox();
+            SuspendLayout();
+            // 
+            // labelDataHora
+            // 
+            labelDataHora.AutoSize = true;
+            labelDataHora.Font = new Font("Showcard Gothic", 15F, FontStyle.Regular, GraphicsUnit.Point);
+            labelDataHora.ForeColor = Color.White;
+            labelDataHora.Location = new Point(376, 388);
+            labelDataHora.Name = "labelDataHora";
+            labelDataHora.Size = new Size(171, 31);
+            labelDataHora.TabIndex = 0;
+            labelDataHora.Text = "Hora e data";
+            // 
+            // textBoxPlaca
+            // 
+            textBoxPlaca.Location = new Point(11, 139);
+            textBoxPlaca.Name = "textBoxPlaca";
+            textBoxPlaca.Size = new Size(206, 27);
+            textBoxPlaca.TabIndex = 1;
+            // 
+            // buttonEntrada
+            // 
+            buttonEntrada.Location = new Point(14, 266);
+            buttonEntrada.Name = "buttonEntrada";
+            buttonEntrada.Size = new Size(94, 39);
+            buttonEntrada.TabIndex = 2;
+            buttonEntrada.Text = "Cadastrar";
+            buttonEntrada.UseVisualStyleBackColor = true;
+            buttonEntrada.Click += buttonEntrada_Click;
+            // 
+            // buttonSaida
+            // 
+            buttonSaida.Location = new Point(134, 266);
+            buttonSaida.Name = "buttonSaida";
+            buttonSaida.Size = new Size(94, 39);
+            buttonSaida.TabIndex = 3;
+            buttonSaida.Text = "Dar Saida";
+            buttonSaida.UseVisualStyleBackColor = true;
+            buttonSaida.Click += buttonSaida_Click;
+            // 
+            // textBoxListaVeiculosEntrada
+            // 
+            textBoxListaVeiculosEntrada.Location = new Point(638, 69);
+            textBoxListaVeiculosEntrada.Multiline = true;
+            textBoxListaVeiculosEntrada.Name = "textBoxListaVeiculosEntrada";
+            textBoxListaVeiculosEntrada.Size = new Size(445, 394);
+            textBoxListaVeiculosEntrada.TabIndex = 4;
+            // 
+            // textBoxListaVeiculosSaida
+            // 
+            textBoxListaVeiculosSaida.Location = new Point(14, 339);
+            textBoxListaVeiculosSaida.Multiline = true;
+            textBoxListaVeiculosSaida.Name = "textBoxListaVeiculosSaida";
+            textBoxListaVeiculosSaida.Size = new Size(204, 83);
+            textBoxListaVeiculosSaida.TabIndex = 5;
+            // 
+            // labelBemVindo
+            // 
+            labelBemVindo.AutoSize = true;
+            labelBemVindo.Font = new Font("Showcard Gothic", 15F, FontStyle.Regular, GraphicsUnit.Point);
+            labelBemVindo.ForeColor = Color.White;
+            labelBemVindo.Location = new Point(326, 29);
+            labelBemVindo.Name = "labelBemVindo";
+            labelBemVindo.Size = new Size(278, 31);
+            labelBemVindo.TabIndex = 6;
+            labelBemVindo.Text = "Bem-Vindo Leandro!";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            label1.ForeColor = Color.White;
+            label1.Location = new Point(14, 97);
+            label1.Name = "label1";
+            label1.Size = new Size(199, 23);
+            label1.TabIndex = 7;
+            label1.Text = "Digite a Placa do Veiculo";
+            // 
+            // textBoxModelo
+            // 
+            textBoxModelo.Location = new Point(92, 186);
+            textBoxModelo.Name = "textBoxModelo";
+            textBoxModelo.Size = new Size(125, 27);
+            textBoxModelo.TabIndex = 8;
+            // 
+            // Form1
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(13, 90, 128);
+            ClientSize = new Size(1107, 488);
+            Controls.Add(textBoxModelo);
+            Controls.Add(label1);
+            Controls.Add(labelBemVindo);
+            Controls.Add(textBoxListaVeiculosSaida);
+            Controls.Add(textBoxListaVeiculosEntrada);
+            Controls.Add(buttonSaida);
+            Controls.Add(buttonEntrada);
+            Controls.Add(textBoxPlaca);
+            Controls.Add(labelDataHora);
+            Name = "Form1";
+            Text = "Estacionamento Atos";
+            Load += Form1_Load;
+            ResumeLayout(false);
+            PerformLayout();
+        }
+
+        #endregion
+
+        private Label labelDataHora;
+        private TextBox textBoxPlaca;
+        private Button buttonEntrada;
+        private Button buttonSaida;
+        private TextBox textBoxListaVeiculosEntrada;
+        private TextBox textBoxListaVeiculosSaida;
+        private Label labelBemVindo;
+        private Label label1;
+        private TextBox textBoxModelo;
+    }
+}

@@ -1,0 +1,12 @@
+Z- Pessoa: Bernard Cornwell - Tel: 5587849565 - Cidade: Recife - RG: 5458745982 - CPF: 04148562486 Curso: Não realiza 
+Y - Aluno: Bernard Cornwell - Matricula: 1356 - Cod. do Curso: 1313 - Curso: Arqueologia Marinha 
+Z- Pessoa: Mary Shelley - Tel: 5185695214 - Cidade: Santa Maria - RG: 5698547895 - CPF: 15478569840 Curso: Não realiza 
+Y - Aluno: Mary Shelley - Matricula: 1797 - Cod. do Curso: 1851 - Curso: Enxertos 
+Z- Pessoa: Phillips Lovecraft - Tel: 5584709655 - Cidade: Porto Alegre - RG: 5645895632 - CPF: 54898745625 Curso: Não realiza 
+Y - Aluno: Phillips Lovecraft - Matricula: 1917 - Cod. do Curso: 1854 - Curso: Variaveis dimencionais  
+Z- Pessoa: Harlan Coben - Tel: 5487965899 - Cidade: S�o Paulo - RG: 5485489652 - CPF: 36521478541 Curso: Não realiza 
+Z- Pessoa: Danelle Perry - Tel: 1358485265 - Cidade: Caxias do Sul - RG: 5632144569 - CPF: 02654187490 Curso: Não realiza 
+Y - Aluno: Danelle Perry - Matricula: 1152 - Cod. do Curso: 3354 - Curso: Contagiosidade 
+Z- Pessoa: William Peter Blatty - Tel: 5532114587 - Cidade: Santa Maria - RG: 5102526547 - CPF: 01919647080 Curso: Não realiza 
+Y - Aluno: William Peter Blatty - Matricula: 666 - Cod. do Curso: 1114 - Curso: Demologia 
+Z- Pessoa: Suzanne Collins - Tel: 4598562321 - Cidade: Florianopoles - RG: 6587878841 - CPF: 02587412369 Curso: Não realiza 

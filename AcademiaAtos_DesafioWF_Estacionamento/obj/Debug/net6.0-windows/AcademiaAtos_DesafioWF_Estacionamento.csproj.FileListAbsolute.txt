@@ -1,0 +1,17 @@
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\bin\Debug\net6.0-windows\AcademiaAtos_DesafioWF_Estacionamento.exe
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\bin\Debug\net6.0-windows\AcademiaAtos_DesafioWF_Estacionamento.deps.json
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\bin\Debug\net6.0-windows\AcademiaAtos_DesafioWF_Estacionamento.runtimeconfig.json
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\bin\Debug\net6.0-windows\AcademiaAtos_DesafioWF_Estacionamento.dll
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\bin\Debug\net6.0-windows\AcademiaAtos_DesafioWF_Estacionamento.pdb
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\obj\Debug\net6.0-windows\AcademiaAtos_DesafioWF_Estacionamento.csproj.AssemblyReference.cache
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\obj\Debug\net6.0-windows\AcademiaAtos_DesafioWF_Estacionamento.Form1.resources
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\obj\Debug\net6.0-windows\AcademiaAtos_DesafioWF_Estacionamento.csproj.GenerateResource.cache
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\obj\Debug\net6.0-windows\AcademiaAtos_DesafioWF_Estacionamento.GeneratedMSBuildEditorConfig.editorconfig
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\obj\Debug\net6.0-windows\AcademiaAtos_DesafioWF_Estacionamento.AssemblyInfoInputs.cache
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\obj\Debug\net6.0-windows\AcademiaAtos_DesafioWF_Estacionamento.AssemblyInfo.cs
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\obj\Debug\net6.0-windows\AcademiaAtos_DesafioWF_Estacionamento.csproj.CoreCompileInputs.cache
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\obj\Debug\net6.0-windows\AcademiaAtos_DesafioWF_Estacionamento.dll
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\obj\Debug\net6.0-windows\refint\AcademiaAtos_DesafioWF_Estacionamento.dll
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\obj\Debug\net6.0-windows\AcademiaAtos_DesafioWF_Estacionamento.pdb
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\obj\Debug\net6.0-windows\AcademiaAtos_DesafioWF_Estacionamento.genruntimeconfig.cache
+D:\LEANDRO\CURSOS\AcademiaAtosNET2023\Aula24\AcademiaAtos_DesafioWF_Estacionamento\obj\Debug\net6.0-windows\ref\AcademiaAtos_DesafioWF_Estacionamento.dll
